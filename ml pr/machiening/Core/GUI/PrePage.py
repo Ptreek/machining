@@ -166,7 +166,7 @@ class PrePage:
             text_box.configure(state="disabled")
             text_box.pack(expand=True, pady=10)
             ctk.CTkButton(
-                frame, text="Remove Null Rows", font=("Arial", 14),
+                frame, text="fill Null Rows", font=("Arial", 14),
                 fg_color="#4a90e2", hover_color="#357abd", text_color="white",
                 command=self.apply_remove_null_rows
             ).pack(pady=10)
@@ -176,12 +176,12 @@ class PrePage:
     def apply_remove_null_rows(self):
         try:
             initial_rows = len(self.processed_df)
-            self.processed_df = self.processed_df.dropna()
-            removed_rows = initial_rows - len(self.processed_df)
-            messagebox.showinfo("Success", f"Removed {removed_rows} rows with null values successfully.")
+            removed_rows = sum(self.processed_df.isnull().any(axis=1))
+            self.processed_df = self.processed_df.fillna(0)
+            messagebox.showinfo("Success", f"fill {removed_rows} null values successfully.")
             self.populate_tabs()
         except Exception as e:
-            messagebox.showerror("Error", f"Failed to remove null rows: {str(e)}")
+            messagebox.showerror("Error", f"Failed to fill null rows: {str(e)}")
 
     def show_remove_outliers(self, frame):
         try:
